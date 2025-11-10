@@ -15,6 +15,7 @@ class OrchidJobPermissionSeeder extends Seeder
         User::query()->each(function (User $user) {
             $permissions = collect($user->permissions ?? [])
                 ->put('platform.jobs', true)
+                ->put('platform.companies', true)
                 ->all();
 
             $user->forceFill([

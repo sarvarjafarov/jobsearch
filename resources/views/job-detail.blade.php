@@ -2,9 +2,18 @@
 
 @section('content')
     <div class="mx-auto max-w-3xl rounded-3xl bg-white p-8 shadow-md ring-1 ring-black/5">
-        <p class="text-sm font-medium text-primary">{{ $job->company }}</p>
+        <div class="flex flex-wrap items-center gap-3 text-sm text-slate-500">
+            @if($job->companyProfile)
+                <a href="{{ route('companies.show', $job->companyProfile) }}" class="text-primary font-semibold hover:underline">
+                    {{ $job->companyProfile->name }}
+                </a>
+            @else
+                <span class="text-primary font-semibold">{{ $job->company }}</span>
+            @endif
+            <span class="text-slate-400">•</span>
+            <span>{{ $job->location ?: 'Remote' }}</span>
+        </div>
         <h1 class="mt-2 text-3xl font-semibold text-body">{{ $job->position }}</h1>
-        <p class="mt-2 text-slate-500">{{ $job->location ?: 'Remote' }}</p>
 
         <dl class="mt-6 grid gap-4 text-sm text-slate-500 sm:grid-cols-2">
             <div class="rounded-2xl border border-slate-100 p-4">
@@ -17,9 +26,29 @@
             </div>
         </dl>
 
-        <div class="mt-8 space-y-4 text-lg leading-relaxed text-slate-600">
+        <div class="mt-6 space-y-4 text-lg leading-relaxed text-slate-600">
             {!! nl2br(e($job->description)) !!}
         </div>
+
+        @if($job->companyProfile)
+            <div class="mt-8 rounded-2xl border border-slate-100 p-6">
+                <p class="text-sm uppercase tracking-wide text-slate-400">Company snapshot</p>
+                <div class="mt-3 flex flex-wrap gap-4 text-sm text-slate-500">
+                    @if($job->companyProfile->industry)
+                        <span>{{ $job->companyProfile->industry }}</span>
+                    @endif
+                    @if($job->companyProfile->headquarters)
+                        <span>{{ $job->companyProfile->headquarters }}</span>
+                    @endif
+                    @if($job->companyProfile->size)
+                        <span>{{ $job->companyProfile->size }}</span>
+                    @endif
+                </div>
+                <a href="{{ route('companies.show', $job->companyProfile) }}" class="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline">
+                    View full company profile →
+                </a>
+            </div>
+        @endif
 
         <div class="mt-8 flex flex-wrap items-center gap-4">
             @if ($job->apply_url)

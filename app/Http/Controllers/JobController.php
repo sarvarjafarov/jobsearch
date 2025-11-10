@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use App\Models\Job;
 use Illuminate\Http\Request;
 
@@ -30,8 +31,21 @@ class JobController extends Controller
             'apply_url' => ['required', 'url', 'max:2048'],
         ]);
 
+        $company = Company::firstOrCreate(
+            ['name' => $validated['company']],
+            [
+                'industry' => null,
+                'headquarters' => $validated['location'] ?: 'Remote',
+                'size' => null,
+                'website_url' => null,
+            ]
+        );
+
+        $validated['company'] = $company->name;
+
         Job::create(array_merge($validated, [
             'status' => Job::STATUS_PENDING,
+            'company_id' => $company->id,
         ]));
 
         return redirect()
@@ -45,6 +59,8 @@ class JobController extends Controller
     public function show(Job $job)
     {
         abort_unless($job->status === Job::STATUS_PUBLISHED, 404);
+
+        $job->load('companyProfile');
 
         return view('job-detail', ['job' => $job]);
     }

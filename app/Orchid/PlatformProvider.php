@@ -44,6 +44,16 @@ class PlatformProvider extends OrchidServiceProvider
                 ->permission('platform.jobs')
                 ->title('Content'),
 
+            Menu::make('Companies')
+                ->icon('bs.building')
+                ->route('platform.companies.list')
+                ->permission('platform.companies'),
+
+            Menu::make('Company Reviews')
+                ->icon('bs.chat-dots')
+                ->route('platform.company.reviews')
+                ->permission('platform.companies'),
+
             Menu::make(__('Users'))
                 ->icon('bs.people')
                 ->route('platform.systems.users')
@@ -68,6 +78,8 @@ class PlatformProvider extends OrchidServiceProvider
         return [
             ItemPermission::group('Jobs')
                 ->addPermission('platform.jobs', 'Manage job listings'),
+            ItemPermission::group('Companies')
+                ->addPermission('platform.companies', 'Manage companies'),
 
             ItemPermission::group(__('System'))
                 ->addPermission('platform.systems.roles', __('Roles'))

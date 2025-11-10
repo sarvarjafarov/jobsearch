@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Orchid\Screens\Job;
 
+use App\Models\Company;
 use App\Models\Job;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Fields\DateTimer;
 use Orchid\Screen\Fields\Input;
+use Orchid\Screen\Fields\Relation;
 use Orchid\Screen\Fields\Select;
 use Orchid\Screen\Fields\TextArea;
 use Orchid\Screen\Screen;
@@ -85,6 +87,11 @@ class JobEditScreen extends Screen
                     ->required()
                     ->maxlength(255),
 
+                Relation::make('job.company_id')
+                    ->title('Link to company profile')
+                    ->fromModel(Company::class, 'name')
+                    ->help('Optional: tie this job to a richer company profile.'),
+
                 Input::make('job.location')
                     ->title('Location')
                     ->placeholder('Remote, San Francisco, etc.')
@@ -131,6 +138,7 @@ class JobEditScreen extends Screen
         $validated = $request->validate([
             'job.position' => ['required', 'string', 'max:255'],
             'job.company' => ['required', 'string', 'max:255'],
+            'job.company_id' => ['nullable', 'exists:companies,id'],
             'job.location' => ['nullable', 'string', 'max:255'],
             'job.description' => ['required', 'string'],
             'job.published_date' => ['required', 'date'],
@@ -140,6 +148,10 @@ class JobEditScreen extends Screen
         ]);
 
         $job->fill($validated['job'])->save();
+
+        if ($job->company_id && $company = Company::find($job->company_id)) {
+            $job->update(['company' => $job->company ?: $company->name]);
+        }
 
         Toast::info('Job saved successfully.');
 

@@ -22,6 +22,7 @@ class Job extends Model
     protected $fillable = [
         'position',
         'company',
+        'company_id',
         'description',
         'published_date',
         'deadline_date',
@@ -47,5 +48,10 @@ class Job extends Model
     public function scopePublished($query)
     {
         return $query->where('status', self::STATUS_PUBLISHED);
+    }
+
+    public function companyProfile()
+    {
+        return $this->belongsTo(Company::class, 'company_id');
     }
 }

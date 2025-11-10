@@ -2,7 +2,11 @@
 
 declare(strict_types=1);
 
+use App\Models\Company;
 use App\Models\Job;
+use App\Orchid\Screens\Company\CompanyEditScreen;
+use App\Orchid\Screens\Company\CompanyListScreen;
+use App\Orchid\Screens\Company\CompanyReviewListScreen;
 use App\Orchid\Screens\Job\JobEditScreen;
 use App\Orchid\Screens\Job\JobListScreen;
 use App\Orchid\Screens\PlatformScreen;
@@ -47,6 +51,31 @@ Route::screen('jobs/{job}/edit', JobEditScreen::class)
     ->breadcrumbs(fn (Trail $trail, Job $job) => $trail
         ->parent('platform.jobs.list')
         ->push($job->position, route('platform.jobs.edit', $job)));
+
+// Companies
+Route::screen('companies', CompanyListScreen::class)
+    ->name('platform.companies.list')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push('Companies', route('platform.companies.list')));
+
+Route::screen('companies/create', CompanyEditScreen::class)
+    ->name('platform.companies.create')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.companies.list')
+        ->push('Create company', route('platform.companies.create')));
+
+Route::screen('companies/{company}/edit', CompanyEditScreen::class)
+    ->name('platform.companies.edit')
+    ->breadcrumbs(fn (Trail $trail, Company $company) => $trail
+        ->parent('platform.companies.list')
+        ->push($company->name, route('platform.companies.edit', $company)));
+
+Route::screen('company-reviews', CompanyReviewListScreen::class)
+    ->name('platform.company.reviews')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push('Company Reviews', route('platform.company.reviews')));
 
 // Platform > Profile
 Route::screen('profile', UserProfileScreen::class)

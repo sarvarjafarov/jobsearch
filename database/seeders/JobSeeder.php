@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Company;
 use App\Models\Job;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
@@ -117,6 +118,8 @@ class JobSeeder extends Seeder
         ];
 
         Job::insert(array_map(function ($job) {
+            $company = Company::where('name', $job['company'])->first();
+            $job['company_id'] = $company?->id;
             $job['created_at'] = now();
             $job['updated_at'] = now();
             return $job;

@@ -32,6 +32,8 @@
                 <a href="{{ route('home') }}" class="text-xl font-semibold text-primary tracking-tight">Jobify</a>
                 <div class="flex items-center gap-6 text-sm font-medium">
                     <a href="{{ route('home') }}" class="transition hover:text-primary">Home</a>
+                    <a href="{{ route('companies.index') }}" class="transition hover:text-primary">Companies</a>
+                    <a href="{{ route('resume.form') }}" class="transition hover:text-primary">Resume Builder</a>
                     <a href="{{ route('jobs.create') }}" class="transition hover:text-primary">Post Job</a>
                     <a href="#contact" class="transition hover:text-primary">Contact</a>
                 </div>

@@ -15,6 +15,7 @@ class HomeController extends Controller
         $query = $request->string('q')->toString();
 
         $jobs = Job::query()
+            ->with('companyProfile')
             ->published()
             ->when($query, function ($builder) use ($query) {
                 return $builder->where(function ($sub) use ($query) {

@@ -51,7 +51,15 @@
                             class="cursor-pointer rounded-2xl transition-all duration-300 hover:bg-slate-50"
                         >
                             <td class="px-4 py-4 font-medium text-slate-900">{{ $job->position }}</td>
-                            <td class="px-4 py-4 text-slate-600">{{ $job->company }}</td>
+                            <td class="px-4 py-4 text-slate-600">
+                                @if($job->companyProfile)
+                                    <a href="{{ route('companies.show', $job->companyProfile) }}" class="font-medium text-primary hover:underline">
+                                        {{ $job->companyProfile->name }}
+                                    </a>
+                                @else
+                                    {{ $job->company }}
+                                @endif
+                            </td>
                             <td class="px-4 py-4 text-slate-500">{{ $job->published_date->format('M d, Y') }}</td>
                             <td class="px-4 py-4 text-slate-500">{{ $job->deadline_date->format('M d, Y') }}</td>
                         </tr>
@@ -70,7 +78,15 @@
                     <div class="flex items-center justify-between gap-4">
                         <div>
                             <p class="text-base font-semibold text-slate-900">{{ $job->position }}</p>
-                            <p class="text-sm text-slate-500">{{ $job->company }}</p>
+                            <p class="text-sm text-slate-500">
+                                @if($job->companyProfile)
+                                    <a href="{{ route('companies.show', $job->companyProfile) }}" class="text-primary hover:underline">
+                                        {{ $job->companyProfile->name }}
+                                    </a>
+                                @else
+                                    {{ $job->company }}
+                                @endif
+                            </p>
                         </div>
                         <span class="text-xs font-medium text-primary">View</span>
                     </div>
