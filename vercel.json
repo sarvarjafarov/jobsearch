@@ -1,0 +1,12 @@
+{
+    "buildCommand": "composer install --optimize-autoloader --no-dev && php artisan config:cache && npm install && npm run build",
+    "outputDirectory": "public",
+    "builds": [
+        { "src": "public/index.php", "use": "@vercel/php" },
+        { "src": "public/build/**/*", "use": "@vercel/static" }
+    ],
+    "routes": [
+        { "src": "/build/(.*)", "dest": "/build/$1" },
+        { "src": "/(.*)", "dest": "/index.php" }
+    ]
+}
