@@ -29,6 +29,8 @@ class Job extends Model
         'location',
         'apply_url',
         'status',
+        'source',
+        'source_url',
     ];
 
     /**

@@ -9,12 +9,19 @@ use App\Orchid\Screens\Company\CompanyListScreen;
 use App\Orchid\Screens\Company\CompanyReviewListScreen;
 use App\Orchid\Screens\Job\JobEditScreen;
 use App\Orchid\Screens\Job\JobListScreen;
+use App\Orchid\Screens\JobSearchSyncScreen;
+use App\Orchid\Screens\PostEditScreen;
+use App\Orchid\Screens\PostListScreen;
 use App\Orchid\Screens\PlatformScreen;
 use App\Orchid\Screens\Role\RoleEditScreen;
 use App\Orchid\Screens\Role\RoleListScreen;
+use App\Orchid\Screens\SeoMetaEditScreen;
+use App\Orchid\Screens\SeoMetaListScreen;
+use App\Orchid\Screens\SeoSettingsScreen;
 use App\Orchid\Screens\User\UserEditScreen;
 use App\Orchid\Screens\User\UserListScreen;
 use App\Orchid\Screens\User\UserProfileScreen;
+use App\Models\SeoMeta;
 use Illuminate\Support\Facades\Route;
 use Tabuna\Breadcrumbs\Trail;
 
@@ -76,6 +83,55 @@ Route::screen('company-reviews', CompanyReviewListScreen::class)
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.index')
         ->push('Company Reviews', route('platform.company.reviews')));
+
+Route::screen('posts', PostListScreen::class)
+    ->name('platform.posts.list')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push('Blog', route('platform.posts.list')));
+
+Route::screen('posts/create', PostEditScreen::class)
+    ->name('platform.posts.create')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.posts.list')
+        ->push('Create post', route('platform.posts.create')));
+
+Route::screen('posts/{post}/edit', PostEditScreen::class)
+    ->name('platform.posts.edit')
+    ->breadcrumbs(fn (Trail $trail, \App\Models\Post $post) => $trail
+        ->parent('platform.posts.list')
+        ->push($post->title, route('platform.posts.edit', $post)));
+
+Route::screen('jobsearch-sync', JobSearchSyncScreen::class)
+    ->name('platform.jobsearch.sync')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push('Jobsearch Sync', route('platform.jobsearch.sync')));
+
+// SEO
+Route::screen('seo/meta', SeoMetaListScreen::class)
+    ->name('platform.seo.meta.list')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push('SEO Entries', route('platform.seo.meta.list')));
+
+Route::screen('seo/meta/create', SeoMetaEditScreen::class)
+    ->name('platform.seo.meta.create')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.seo.meta.list')
+        ->push('Create entry', route('platform.seo.meta.create')));
+
+Route::screen('seo/meta/{meta}/edit', SeoMetaEditScreen::class)
+    ->name('platform.seo.meta.edit')
+    ->breadcrumbs(fn (Trail $trail, SeoMeta $meta) => $trail
+        ->parent('platform.seo.meta.list')
+        ->push($meta->route_name ?: ($meta->path ?: 'SEO entry'), route('platform.seo.meta.edit', $meta)));
+
+Route::screen('seo/settings', SeoSettingsScreen::class)
+    ->name('platform.seo.settings')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push('SEO Settings', route('platform.seo.settings')));
 
 // Platform > Profile
 Route::screen('profile', UserProfileScreen::class)

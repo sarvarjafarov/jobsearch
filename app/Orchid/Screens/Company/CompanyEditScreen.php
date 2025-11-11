@@ -16,7 +16,7 @@ use Orchid\Support\Facades\Toast;
 
 class CompanyEditScreen extends Screen
 {
-    public Company $company;
+    public ?Company $company = null;
 
     public $permission = ['platform.companies'];
 

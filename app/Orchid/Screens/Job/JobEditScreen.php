@@ -23,7 +23,7 @@ class JobEditScreen extends Screen
     /**
      * Current job model.
      */
-    public Job $job;
+    public ?Job $job = null;
 
     /**
      * Permissions required for the screen.
@@ -125,8 +125,7 @@ class JobEditScreen extends Screen
                     ->rows(6)
                     ->required()
                     ->placeholder('Describe the opportunity, responsibilities, and ideal profile.'),
-            ])->title('Job Details')
-                ->description('These values sync directly with the public job board.'),
+            ])->title('Job Details'),
         ];
     }
 

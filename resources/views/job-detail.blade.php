@@ -26,9 +26,18 @@
             </div>
         </dl>
 
-        <div class="mt-6 space-y-4 text-lg leading-relaxed text-slate-600">
-            {!! nl2br(e($job->description)) !!}
-        </div>
+        @php
+            $descriptionHtml = \App\Support\JobDescriptionFormatter::toHtml($job->description);
+        @endphp
+
+        @if($descriptionHtml)
+            <div class="mt-8 rounded-3xl border border-slate-100 bg-gradient-to-br from-white to-slate-50 p-6 shadow-sm">
+                <h2 class="text-2xl font-semibold text-body">Role snapshot</h2>
+                <div class="job-description prose prose-slate mt-4 max-w-none text-base leading-relaxed marker:text-primary prose-ul:my-4 prose-li:ml-0">
+                    {!! $descriptionHtml !!}
+                </div>
+            </div>
+        @endif
 
         @if($job->companyProfile)
             <div class="mt-8 rounded-2xl border border-slate-100 p-6">

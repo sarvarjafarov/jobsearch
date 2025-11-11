@@ -49,10 +49,33 @@ class PlatformProvider extends OrchidServiceProvider
                 ->route('platform.companies.list')
                 ->permission('platform.companies'),
 
+            Menu::make('Blog')
+                ->icon('bs.journal-text')
+                ->route('platform.posts.list')
+                ->permission('platform.posts'),
+
             Menu::make('Company Reviews')
                 ->icon('bs.chat-dots')
                 ->route('platform.company.reviews')
                 ->permission('platform.companies'),
+
+            Menu::make('Jobsearch Sync')
+                ->icon('bs.cloud-download')
+                ->route('platform.jobsearch.sync')
+                ->permission('platform.scraper')
+                ->divider(),
+
+            Menu::make('SEO Entries')
+                ->icon('bs.search')
+                ->route('platform.seo.meta.list')
+                ->permission('platform.seo')
+                ->title('Optimization'),
+
+            Menu::make('SEO Settings')
+                ->icon('bs.gear')
+                ->route('platform.seo.settings')
+                ->permission('platform.seo')
+                ->divider(),
 
             Menu::make(__('Users'))
                 ->icon('bs.people')
@@ -78,8 +101,15 @@ class PlatformProvider extends OrchidServiceProvider
         return [
             ItemPermission::group('Jobs')
                 ->addPermission('platform.jobs', 'Manage job listings'),
+            ItemPermission::group('Blog')
+                ->addPermission('platform.posts', 'Manage blog posts'),
             ItemPermission::group('Companies')
                 ->addPermission('platform.companies', 'Manage companies'),
+            ItemPermission::group('Integrations')
+                ->addPermission('platform.scraper', 'Sync jobsearch.az feed'),
+
+            ItemPermission::group('SEO')
+                ->addPermission('platform.seo', 'Manage SEO module'),
 
             ItemPermission::group(__('System'))
                 ->addPermission('platform.systems.roles', __('Roles'))

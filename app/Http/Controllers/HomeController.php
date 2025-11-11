@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Job;
+use App\Models\Post;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -13,8 +14,10 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $query = $request->string('q')->toString();
+        $companyFilter = $request->string('company')->toString();
+        $order = $request->input('sort', 'latest');
 
-        $jobs = Job::query()
+        $jobsQuery = Job::query()
             ->with('companyProfile')
             ->published()
             ->when($query, function ($builder) use ($query) {
@@ -23,12 +26,36 @@ class HomeController extends Controller
                         ->orWhere('company', 'like', "%{$query}%");
                 });
             })
-            ->orderByDesc('published_date')
+            ->when($companyFilter, fn ($builder) => $builder->where('company', $companyFilter))
+            ->when($order === 'soonest', fn ($builder) => $builder->orderBy('deadline_date'))
+            ->when($order !== 'soonest', fn ($builder) => $builder->orderByDesc('published_date'));
+
+        $jobs = $jobsQuery->paginate(20)->withQueryString();
+
+        $companies = Job::query()
+            ->select('company')
+            ->published()
+            ->distinct()
+            ->orderBy('company')
+            ->pluck('company')
+            ->filter()
+            ->values();
+
+        $totalJobs = Job::published()->count();
+
+        $latestPosts = Post::published()
+            ->latest('published_at')
+            ->take(3)
             ->get();
 
         return view('home', [
             'jobs' => $jobs,
             'query' => $query,
+            'companies' => $companies,
+            'selectedCompany' => $companyFilter,
+            'selectedSort' => $order,
+            'totalJobs' => $totalJobs,
+            'latestPosts' => $latestPosts,
         ]);
     }
 }
