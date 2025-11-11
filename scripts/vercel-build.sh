@@ -19,7 +19,8 @@ php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 php composer-setup.php --install-dir=. --filename=composer
 rm composer-setup.php
 
-./composer install --optimize-autoloader --no-dev
+./composer install --optimize-autoloader --no-dev \
+    --ignore-platform-req=ext-posix --ignore-platform-req=ext-pcntl
 php artisan config:cache
 npm install
 npm run build
