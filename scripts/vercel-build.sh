@@ -2,8 +2,17 @@
 set -euo pipefail
 
 if ! command -v php >/dev/null 2>&1; then
-    apt-get update
-    apt-get install -y php-cli unzip
+    if command -v apt-get >/dev/null 2>&1; then
+        apt-get update
+        apt-get install -y php-cli unzip
+    elif command -v yum >/dev/null 2>&1; then
+        yum install -y php-cli unzip
+    elif command -v apk >/dev/null 2>&1; then
+        apk add --no-cache php php-cli php-phar php-openssl php-mbstring unzip
+    else
+        echo "PHP is required but no supported package manager was found." >&2
+        exit 1
+    fi
 fi
 
 php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
