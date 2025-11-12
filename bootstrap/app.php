@@ -20,7 +20,18 @@ $app = Application::configure(basePath: dirname(__DIR__))
         //
     })->create();
 
-if ($storagePath = env('APP_STORAGE')) {
+// Vercel (and similar) mount the project read-only, so fall back to /tmp automatically.
+$storagePath = env('APP_STORAGE');
+
+if (! $storagePath) {
+    $defaultStorage = dirname(__DIR__).'/storage';
+
+    if (! is_writable($defaultStorage)) {
+        $storagePath = sys_get_temp_dir().'/laravel-storage';
+    }
+}
+
+if ($storagePath) {
     $app->useStoragePath($storagePath);
 
     $directories = [
