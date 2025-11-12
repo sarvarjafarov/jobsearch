@@ -9,6 +9,8 @@
     "routes": [
         { "src": "/build/(.*)", "dest": "/build/$1" },
         { "src": "/assets/(.*)", "dest": "/build/assets/$1" },
+        { "src": "/vendor/(.*)", "dest": "/vendor/$1" },
+        { "src": "/storage/(.*)", "dest": "/storage/$1" },
         { "src": "/(.*)", "dest": "/api/index.php" }
     ]
 }
