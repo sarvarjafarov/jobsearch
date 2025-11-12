@@ -21,6 +21,18 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
+## Deploying to Vercel
+
+Vercel’s serverless functions mount your project in a read-only filesystem, so Laravel cannot write compiled views, cache files, or logs to `storage/` by default. Without additional configuration the platform returns a `500` error similar to `file_put_contents(.../storage/framework/views/xxx.php): Failed to open stream: Permission denied`.
+
+To run this project on Vercel:
+
+1. Define the environment variables shown in `.env.vercel` inside the Vercel dashboard (or via `vercel env`). The important one is `APP_STORAGE=/tmp/storage`, which tells Laravel to use the writable `/tmp` directory for logs, cached config, sessions, and compiled Blade views. Keep `LOG_CHANNEL=stderr`, `CACHE_STORE=array`, `SESSION_DRIVER=cookie`, and `QUEUE_CONNECTION=sync` so no other disk writes are attempted.
+2. Supply your production credentials (database, mail, Google Indexing, etc.) in the same place—do **not** commit real secrets to source control.
+3. Deploy normally with `vercel --prod`. The existing `scripts/vercel-build.sh` takes care of installing Composer dependencies, caching config, and building the front-end assets.
+
+If you ever need a local .env for Vercel-style testing, copy `.env.vercel` to `.env` and fill in the secrets before running `php artisan config:cache`.
+
 ## Learning Laravel
 
 Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
