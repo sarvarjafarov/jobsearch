@@ -14,12 +14,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $viewPath = resource_path('views');
-        $configuredPaths = config('view.paths', []);
-
-        if (! in_array($viewPath, $configuredPaths, true)) {
-            config(['view.paths' => array_merge([$viewPath], $configuredPaths)]);
-        }
+        $this->configureViewPaths();
+        $this->configurePlatformIcons();
     }
 
     /**
@@ -34,5 +30,32 @@ class AppServiceProvider extends ServiceProvider
         if (! in_array($viewPath, $view->getFinder()->getPaths(), true)) {
             $view->addLocation($viewPath);
         }
+    }
+
+    protected function configureViewPaths(): void
+    {
+        $viewPath = resource_path('views');
+        $configuredPaths = config('view.paths', []);
+
+        if (! in_array($viewPath, $configuredPaths, true)) {
+            config(['view.paths' => array_merge([$viewPath], $configuredPaths)]);
+        }
+    }
+
+    protected function configurePlatformIcons(): void
+    {
+        $icons = collect(config('platform.icons', []));
+
+        $bootstrapIconsPath = base_path('vendor/twbs/bootstrap-icons/icons');
+
+        if (is_dir($bootstrapIconsPath)) {
+            $icons->put('bs', $bootstrapIconsPath);
+        }
+
+        config([
+            'platform.icons' => $icons
+                ->filter(fn ($path) => is_string($path) && is_dir($path))
+                ->all(),
+        ]);
     }
 }
