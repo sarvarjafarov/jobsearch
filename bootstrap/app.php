@@ -26,7 +26,24 @@ $storagePath = env('APP_STORAGE');
 if (! $storagePath) {
     $defaultStorage = dirname(__DIR__).'/storage';
 
-    if (! is_writable($defaultStorage)) {
+    $canWriteToDefaultStorage = static function (string $path): bool {
+        if (! is_dir($path)) {
+            return false;
+        }
+
+        $testFile = $path.'/.write-test';
+        $result = @file_put_contents($testFile, 'test');
+
+        if ($result === false) {
+            return false;
+        }
+
+        @unlink($testFile);
+
+        return true;
+    };
+
+    if (! $canWriteToDefaultStorage($defaultStorage)) {
         $storagePath = sys_get_temp_dir().'/laravel-storage';
     }
 }
