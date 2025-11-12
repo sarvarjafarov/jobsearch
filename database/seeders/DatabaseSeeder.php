@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             CompanySeeder::class,
             JobSeeder::class,
             PostSeeder::class,
+            OrchidAdminSeeder::class,
             OrchidJobPermissionSeeder::class,
         ]);
     }
